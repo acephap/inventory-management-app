@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 const InventoryList = ({ inventory, setInventory }) => {
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     // Fetch inventory data from the backend API only if not provided via props
@@ -26,6 +27,15 @@ const InventoryList = ({ inventory, setInventory }) => {
       setLoading(false);
     }
   }, [inventory, setInventory]);
+
+  // Temporary debug effect for search filtering
+  useEffect(() => {
+    const filteredItems = inventory.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    console.log("Search term:", searchTerm);
+    console.log("Filtered items:", filteredItems);
+  }, [searchTerm, inventory]);
 
   // Function to handle deleting an item
   const handleDelete = (id) => {
@@ -60,6 +70,10 @@ const InventoryList = ({ inventory, setInventory }) => {
     }
   };
 
+  // Filter items based on the search term
+  const filteredItems = inventory.filter(item => 
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return <p>Loading inventory...</p>;
@@ -68,6 +82,16 @@ const InventoryList = ({ inventory, setInventory }) => {
   return (
     <div>
       <h2>Inventory List</h2>
+      <input
+      type="text"
+      placeholder="Search inventory..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="search-input"
+    />
+    {filteredItems.length === 0 && searchTerm && (
+      <p>No items match your search.</p>
+    )}
       <ul>
         {inventory.map(item => (
           <li key={item.id}>
