@@ -8,7 +8,7 @@ const InventoryList = () => {
 
   useEffect(() => {
     // Fetch inventory data from the backend API
-    fetch('http://localhost:5000/api/inventory')
+    fetch('/api/inventory')
       .then(response => response.json())
       .then(data => {
         setInventory(data);
