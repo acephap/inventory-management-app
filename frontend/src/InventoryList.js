@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 
-const InventoryList = () => {
-  const [inventory, setInventory] = useState([]);
+const InventoryList = ({ inventory, setInventory }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Fetch inventory data from the backend API only if not provided via props
+    if (inventory.length === 0) {
+
     // Fetch inventory data from the backend API
     fetch('/api/inventory')
       .then(response => response.json())
@@ -15,12 +17,16 @@ const InventoryList = () => {
         setInventory(data);
         setLoading(false);
       })
+
       .catch(error => {
         console.error('Error fetching inventory:', error);
         setLoading(false);
       });
-  }, []);
-
+  } else {
+      setLoading(false);
+    }
+  }, [inventory, setInventory]);
+  
   if (loading) {
     return <p>Loading inventory...</p>;
   }
