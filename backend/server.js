@@ -35,7 +35,34 @@ app.post('/api/inventory', (req, res) => {
   newItem.id = inventoryItems.length + 1;
   inventoryItems.push(newItem);
   res.status(201).json(newItem);
-});  
+});
+
+// PUT endpoint to update an existing inventory item
+app.put('/api/inventory/:id', (req, res) => {
+  const itemId = parseInt(req.params.id);
+  const updatedData = req.body;
+  const index = inventoryItems.findIndex(item => item.id === itemId);
+  if (index !== -1) {
+    // Merge updated fields into the existing item
+    inventoryItems[index] = { ...inventoryItems[index], ...updatedData };
+    res.json(inventoryItems[index]);
+  } else {
+    res.status(404).json({ message: "Item not found" });
+  }
+});
+
+// DELETE endpoint to remove an inventory item by id
+app.delete('/api/inventory/:id', (req, res) => {
+  const itemId = parseInt(req.params.id);
+  const index = inventoryItems.findIndex(item => item.id === itemId);
+  if (index !== -1) {
+    const deletedItem = inventoryItems.splice(index, 1)[0];
+    res.json(deletedItem);
+  } else {
+    res.status(404).json({ message: "Item not found" });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {
