@@ -11,6 +11,7 @@ const InventoryList = () => {
     fetch('/api/inventory')
       .then(response => response.json())
       .then(data => {
+        console.log("Fetched data:", data); // <-- Add this line
         setInventory(data);
         setLoading(false);
       })
