@@ -32,7 +32,7 @@ app.get('/api/inventory', (req, res) => {
 app.post('/api/inventory', (req, res) => {
   const newItem = req.body;
   // For simplicity, assign a new id by incrementing the length
-  newItem.id = inventoryItems.length + 1;
+  newItem.id = Date.now();  // Generates a unique number based on the current time
   inventoryItems.push(newItem);
   res.status(201).json(newItem);
 });

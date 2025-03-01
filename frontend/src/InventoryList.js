@@ -93,8 +93,8 @@ const InventoryList = ({ inventory, setInventory }) => {
       <p>No items match your search.</p>
     )}
       <ul>
-        {inventory.map(item => (
-          <li key={item.id}>
+        {filteredItems.map((item, index) => (
+          <li key={`${item.id}-${index}`}>
             {item.name} - Quantity: {item.quantity}
             <button onClick={() => handleEdit(item.id)}>Edit</button>
             <button onClick={() => handleDelete(item.id)}>Delete</button>
