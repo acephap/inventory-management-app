@@ -6,7 +6,9 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
-const InventoryItem = require('./models/InventoryItem'); // Import once here
+const InventoryItem = require('./models/InventoryItem');
+const Project = require('./models/Project');
+
 
 const jwtSecret = 'your_jwt_secret';
 
@@ -166,6 +168,61 @@ const authMiddleware = (req, res, next) => {
 app.get('/api/protected', authMiddleware, (req, res) => {
   res.json({ message: `Hello ${req.user.username}, you have access to protected data!` });
 });
+
+// GET endpoint: Fetch all projects
+app.get('/api/projects', async (req, res) => {
+  try {
+    const projects = await Project.find();
+    res.json(projects);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
+});
+
+// POST endpoint: Create a new project
+app.post('/api/projects', async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const newProject = new Project({ name, description });
+    const savedProject = await newProject.save();
+    res.status(201).json(savedProject);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create project' });
+  }
+});
+
+// PUT endpoint: Update an existing project
+app.put('/api/projects/:id', async (req, res) => {
+  try {
+    const updatedProject = await Project.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (updatedProject) {
+      res.json(updatedProject);
+    } else {
+      res.status(404).json({ error: 'Project not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update project' });
+  }
+});
+
+// DELETE endpoint: Remove a project by id
+app.delete('/api/projects/:id', async (req, res) => {
+  try {
+    const deletedProject = await Project.findByIdAndDelete(req.params.id);
+    if (deletedProject) {
+      res.json(deletedProject);
+    } else {
+      res.status(404).json({ error: 'Project not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete project' });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {
