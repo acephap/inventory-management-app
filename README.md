@@ -27,14 +27,3 @@ DevOps & Tools
     Git & GitHub: For version control and collaborative development.
     VS Code: As the primary development environment.
     Docker (Future Consideration):** For containerization and simplified deployment.
-
-## 🚀 Getting Started
-
-Prerequisites
-    Node.js and npm installed on your development machine.
-    Git installed for version control.
-
-    1. Clone the Repository
-    bash
-    git clone https://github.com/<your-username>/inventory-management-app.git
-    cd inventory-management-app
