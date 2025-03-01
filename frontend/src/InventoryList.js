@@ -6,6 +6,10 @@ const InventoryList = ({ inventory, setInventory }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // New state for sorting: field and order
+  const [sortBy, setSortBy] = useState('name'); // 'name' or 'quantity'
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
+
   useEffect(() => {
     // Fetch inventory data from the backend API only if not provided via props
     if (inventory.length === 0) {
@@ -75,6 +79,22 @@ const InventoryList = ({ inventory, setInventory }) => {
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+   // Sort the filtered items based on sortBy and sortOrder
+   const sortedItems = filteredItems.slice().sort((a, b) => {
+    if (sortBy === 'name') {
+      // Compare names alphabetically
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) return sortOrder === 'asc' ? -1 : 1;
+      if (nameA > nameB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    } else if (sortBy === 'quantity') {
+      // Compare numeric values
+      return sortOrder === 'asc' ? a.quantity - b.quantity : b.quantity - a.quantity;
+    }
+    return 0;
+  });
+
   if (loading) {
     return <p>Loading inventory...</p>;
   }
@@ -83,17 +103,28 @@ const InventoryList = ({ inventory, setInventory }) => {
     <div>
       <h2>Inventory List</h2>
       <input
-      type="text"
-      placeholder="Search inventory..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="search-input"
-    />
-    {filteredItems.length === 0 && searchTerm && (
-      <p>No items match your search.</p>
-    )}
+        type="text"
+        placeholder="Search inventory..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+      {filteredItems.length === 0 && searchTerm && (
+        <p>No items match your search.</p>
+      )}
+      {/* Sorting Controls */}
+      <div className="sort-controls">
+        <label>Sort By: </label>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="name">Name</option>
+          <option value="quantity">Quantity</option>
+        </select>
+        <button onClick={() => setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}>
+          {sortOrder === 'asc' ? 'Asc' : 'Desc'}
+        </button>
+      </div>
       <ul>
-        {filteredItems.map((item, index) => (
+        {sortedItems.map((item, index) => (
           <li key={`${item.id}-${index}`}>
             {item.name} - Quantity: {item.quantity}
             <button onClick={() => handleEdit(item.id)}>Edit</button>
@@ -102,7 +133,7 @@ const InventoryList = ({ inventory, setInventory }) => {
         ))}
       </ul>
     </div>
-  );
+  ); 
 };
 
 export default InventoryList;
