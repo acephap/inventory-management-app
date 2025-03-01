@@ -3,6 +3,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('./models/User');
+const InventoryItem = require('./models/InventoryItem'); // Import once here
+
+const jwtSecret = 'your_jwt_secret';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -21,9 +27,6 @@ mongoose.connect(mongoURI, {
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
-
-// Import the InventoryItem model
-const InventoryItem = require('./models/InventoryItem');
 
 // Define a simple route to test the server
 app.get('/', (req, res) => {
@@ -81,6 +84,87 @@ app.delete('/api/inventory/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete inventory item' });
   }
+});
+
+// POST endpoint for user registration
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+    
+    // Check if user already exists (by username or email)
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+    
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create new user document
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role
+    });
+    
+    await newUser.save();
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST endpoint for user login
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    
+    // Find the user by username
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+    
+    // Compare provided password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+    
+    // Create and sign a JWT token
+    const token = jwt.sign(
+      { userId: user._id, username: user.username, role: user.role },
+      jwtSecret,
+      { expiresIn: '1h' }
+    );
+    
+    res.json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Middleware to protect routes
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+  const token = authHeader.split(' ')[1]; // Expected format: "Bearer <token>"
+  jwt.verify(token, jwtSecret, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+    req.user = decoded; // { userId, username, role }
+    next();
+  });
+};
+
+app.get('/api/protected', authMiddleware, (req, res) => {
+  res.json({ message: `Hello ${req.user.username}, you have access to protected data!` });
 });
 
 // Start the server
