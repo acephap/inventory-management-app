@@ -1,4 +1,6 @@
-/* CSS Variables for light theme */
+/* =========================================
+   1. Basic Variables & Themes
+========================================= */
 :root {
   --bg-color: #f4f4f4;
   --text-color: #000000;
@@ -18,26 +20,26 @@
   --card-shadow: rgba(0, 0, 0, 0.5);
 }
 
-/* General Styles */
+/* =========================================
+   2. Global Resets & Body
+========================================= */
 body {
   font-family: Arial, sans-serif;
   background-color: var(--bg-color);
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
 }
 
-/* Main App Container */
+/* =========================================
+   3. Main App Container
+========================================= */
 .App {
-  width: 90%;
-  max-width: 600px;
+  max-width: 1200px;
+  margin: 0 auto;
   background: var(--card-bg);
-  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px var(--card-shadow);
+  padding-top: 60px; /* Ensure the content starts below the fixed header */
 }
 
 /* Header */
@@ -48,161 +50,98 @@ body {
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 20px;
-}
-
-/* Inventory Container & Search Input */
-.inventory-container {
-  margin: 20px 0;
-}
-
-.search-input {
-  margin-bottom: 10px;
-  padding: 8px;
+  position: fixed;
+  top: 0;
   width: 100%;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  z-index: 1000;
 }
 
-/* Inventory Grid Layout */
-.inventory-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+/* =========================================
+   4. Sidebar
+========================================= */
+.sidebar {
+  width: 200px;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 60px); /* Full height minus header */
+  position: fixed;
+  top: 60px; /* Start the sidebar below the fixed header */
+  left: 0;
+  overflow-y: auto;
 }
 
-/* Inventory Card Styling */
-.inventory-card {
-  background-color: var(--card-bg);
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 2px 4px var(--card-shadow);
-  transition: transform 0.2s ease;
-}
-
-.inventory-card:hover {
-  transform: translateY(-4px);
-}
-
-.inventory-card h3 {
-  margin-top: 0;
-}
-
-.inventory-card button {
-  margin-right: 8px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.inventory-card button:first-of-type {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.inventory-card button:last-of-type {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-/* Form Elements */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input,
-textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* Sorting Controls */
-.sort-controls {
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Projects Component Styling */
-.projects-form {
+.sidebar h2 {
+  font-size: 1.5em;
   margin-bottom: 20px;
 }
 
-.projects-form input,
-.projects-form textarea {
-  display: block;
-  margin-bottom: 10px;
-  padding: 8px;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.projects-form button {
-  padding: 8px 12px;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.projects-form button:hover {
-  opacity: 0.9;
-}
-
-.projects-list {
+.sidebar ul {
   list-style: none;
   padding: 0;
 }
 
-.projects-list li {
-  background: #f9f9f9;
-  padding: 10px;
+.sidebar li {
   margin-bottom: 10px;
-  border-radius: 4px;
 }
 
-/* Auth container styling */
-.auth-container {
-  max-width: 400px;
-  margin: 20px auto;
+.sidebar a {
+  color: var(--header-text);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   5. Main Content
+========================================= */
+.main-content {
+  flex: 1;
   padding: 20px;
-  background: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px var(--card-shadow);
+  margin-left: 220px; /* Ensure it stays to the right of the sidebar */
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--bg-color);
 }
 
-/* Auth form styling */
-.auth-form input,
-.auth-form textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* =========================================
+   6. Responsive Adjustments with Media Queries
+========================================= */
+@media (min-width: 769px) {
+  .sidebar {
+    width: 200px;
+    position: fixed;
+    height: calc(100vh - 60px); /* Sidebar starts below the header */
+    top: 60px; /* Header height */
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 220px; /* Adjust for the sidebar width */
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--bg-color);
+  }
 }
 
-.auth-form button {
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+@media (max-width: 768px) {
+  .App {
+    flex-direction: column;
+  }
 
-.auth-form button:hover {
-  opacity: 0.9;
-}
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
 
-/* Error message styling */
-.error-msg {
-  color: red;
-  margin-bottom: 10px;
+  .main-content {
+    margin-left: 0;
+  }
 }
