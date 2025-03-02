@@ -1,9 +1,27 @@
-/* App.css */
+/* CSS Variables for light theme */
+:root {
+  --bg-color: #f4f4f4;
+  --text-color: #000000;
+  --header-bg: #007bff;
+  --header-text: #ffffff;
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme overrides */
+.dark {
+  --bg-color: #121212;
+  --text-color: #f1f1f1;
+  --header-bg: #333333;
+  --header-text: #f1f1f1;
+  --card-bg: #1e1e1e;
+  --card-shadow: rgba(0, 0, 0, 0.5);
+}
 
 /* General Styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: var(--bg-color);
   margin: 0;
   padding: 0;
   display: flex;
@@ -16,76 +34,27 @@ body {
 .App {
   width: 90%;
   max-width: 600px;
-  background: white;
+  background: var(--card-bg);
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--card-shadow);
 }
 
 /* Header */
 .App-header {
   text-align: center;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--header-bg);
+  color: var(--header-text);
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
-/* Inventory List */
-ul {
-  list-style: none;
-  padding: 0;
+/* Inventory Container & Search Input */
+.inventory-container {
+  margin: 20px 0;
 }
 
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Buttons */
-button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 5px;
-}
-
-button:first-of-type {
-  background-color: #28a745;
-  color: white;
-}
-
-button:last-of-type {
-  background-color: #dc3545;
-  color: white;
-}
-
-button:hover {
-  opacity: 0.8;
-}
-
-/* Form */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* Add this to App.css */
 .search-input {
   margin-bottom: 10px;
   padding: 8px;
@@ -94,10 +63,64 @@ input {
   border: 1px solid #ccc;
 }
 
-/* App.css */
+/* Inventory Grid Layout */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
 
-/* ...existing styles... */
+/* Inventory Card Styling */
+.inventory-card {
+  background-color: var(--card-bg);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+  transition: transform 0.2s ease;
+}
 
+.inventory-card:hover {
+  transform: translateY(-4px);
+}
+
+.inventory-card h3 {
+  margin-top: 0;
+}
+
+.inventory-card button {
+  margin-right: 8px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.inventory-card button:first-of-type {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.inventory-card button:last-of-type {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+/* Form Elements */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input,
+textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Sorting Controls */
 .sort-controls {
   margin-bottom: 10px;
   display: flex;
@@ -105,7 +128,7 @@ input {
   gap: 10px;
 }
 
-/* Styling for Projects Component */
+/* Projects Component Styling */
 .projects-form {
   margin-bottom: 20px;
 }
@@ -143,4 +166,43 @@ input {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 4px;
+}
+
+/* Auth container styling */
+.auth-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--card-shadow);
+}
+
+/* Auth form styling */
+.auth-form input,
+.auth-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.auth-form button {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.auth-form button:hover {
+  opacity: 0.9;
+}
+
+/* Error message styling */
+.error-msg {
+  color: red;
+  margin-bottom: 10px;
 }

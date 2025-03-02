@@ -2,53 +2,50 @@
 
 import React, { useEffect, useState } from 'react';
 
-const InventoryList = ({ inventory, setInventory }) => {
+const InventoryList = ({ inventory, setInventory, projectId }) => {
+  // State for loading indicator
   const [loading, setLoading] = useState(true);
+  // State for the search term entered by the user
   const [searchTerm, setSearchTerm] = useState('');
+  // State for sorting: sort field ('name' or 'quantity') and sort order ('asc' or 'desc')
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  // New state for sorting: field and order
-  const [sortBy, setSortBy] = useState('name'); // 'name' or 'quantity'
-  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
-
+  // Fetch inventory for the selected project only
   useEffect(() => {
-    // Fetch inventory data from the backend API only if not provided via props
-    if (inventory.length === 0) {
-
-    // Fetch inventory data from the backend API
-    fetch('/api/inventory')
+    // If no project is selected, do not fetch inventory and set loading to false
+    if (!projectId) {
+      setLoading(false);
+      return;
+    }
+    // Fetch inventory data from the backend for the given projectId
+    fetch(`/api/projects/${projectId}/inventory`)
       .then(response => response.json())
       .then(data => {
-        console.log("Fetched data:", data); // <-- Add this line
         setInventory(data);
         setLoading(false);
       })
-
       .catch(error => {
         console.error('Error fetching inventory:', error);
         setLoading(false);
       });
-  } else {
-      setLoading(false);
-    }
-  }, [inventory, setInventory]);
+  }, [projectId, setInventory]);
 
-  // Temporary debug effect for search filtering
+  // Debugging: log search term and filtered items when they change
   useEffect(() => {
-    const filteredItems = inventory.filter(item =>
+    const debugFiltered = inventory.filter(item =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     console.log("Search term:", searchTerm);
-    console.log("Filtered items:", filteredItems);
+    console.log("Filtered items:", debugFiltered);
   }, [searchTerm, inventory]);
 
   // Function to handle deleting an item
   const handleDelete = (id) => {
-    fetch(`/api/inventory/${id}`, {
-      method: 'DELETE'
-    })
+    fetch(`/api/inventory/${id}`, { method: 'DELETE' })
       .then(response => response.json())
       .then(() => {
-        setInventory(prev => prev.filter(item => item.id !== id));
+        setInventory(prev => prev.filter(item => item._id !== id));
       })
       .catch(error => console.error('Error deleting item:', error));
   };
@@ -67,41 +64,47 @@ const InventoryList = ({ inventory, setInventory }) => {
         .then(response => response.json())
         .then(updatedData => {
           setInventory(prev =>
-            prev.map(item => (item.id === id ? updatedData : item))
+            prev.map(item => (item._id === id ? updatedData : item))
           );
         })
         .catch(error => console.error('Error updating item:', error));
     }
   };
 
-  // Filter items based on the search term
-  const filteredItems = inventory.filter(item => 
+  // Filter inventory items based on the search term (case-insensitive)
+  const filteredItems = inventory.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-   // Sort the filtered items based on sortBy and sortOrder
-   const sortedItems = filteredItems.slice().sort((a, b) => {
+  // Sort the filtered items based on the selected sort field and order
+  const sortedItems = filteredItems.slice().sort((a, b) => {
     if (sortBy === 'name') {
-      // Compare names alphabetically
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
       if (nameA < nameB) return sortOrder === 'asc' ? -1 : 1;
       if (nameA > nameB) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     } else if (sortBy === 'quantity') {
-      // Compare numeric values
       return sortOrder === 'asc' ? a.quantity - b.quantity : b.quantity - a.quantity;
     }
     return 0;
   });
 
+  // Display a loading message while fetching inventory data
   if (loading) {
     return <p>Loading inventory...</p>;
   }
 
+  // If no project is selected, display a prompt to select a project
+  if (!projectId) {
+    return <p>Please select a project to view its inventory.</p>;
+  }
+
+  // Render the inventory UI
   return (
-    <div>
+    <div className="inventory-container">
       <h2>Inventory List</h2>
+      {/* Search input to filter inventory items */}
       <input
         type="text"
         placeholder="Search inventory..."
@@ -109,10 +112,11 @@ const InventoryList = ({ inventory, setInventory }) => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-input"
       />
+      {/* Display a message if search yields no matching items */}
       {filteredItems.length === 0 && searchTerm && (
         <p>No items match your search.</p>
       )}
-      {/* Sorting Controls */}
+      {/* Sorting controls */}
       <div className="sort-controls">
         <label>Sort By: </label>
         <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
@@ -123,17 +127,19 @@ const InventoryList = ({ inventory, setInventory }) => {
           {sortOrder === 'asc' ? 'Asc' : 'Desc'}
         </button>
       </div>
-      <ul>
+      {/* Display inventory items in a grid layout */}
+      <div className="inventory-grid">
         {sortedItems.map((item, index) => (
-          <li key={`${item.id}-${index}`}>
-            {item.name} - Quantity: {item.quantity}
-            <button onClick={() => handleEdit(item.id)}>Edit</button>
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
-          </li>
+          <div key={`${item._id}-${index}`} className="inventory-card">
+            <h3>{item.name}</h3>
+            <p>Quantity: {item.quantity}</p>
+            <button onClick={() => handleEdit(item._id)}>Edit</button>
+            <button onClick={() => handleDelete(item._id)}>Delete</button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
-  ); 
+  );
 };
 
 export default InventoryList;

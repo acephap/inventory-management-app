@@ -10,6 +10,12 @@ const InventoryItemSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: true
+  },
+  // Associate each inventory item with a project
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true
   }
 });
 

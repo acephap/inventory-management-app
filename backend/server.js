@@ -223,6 +223,26 @@ app.delete('/api/projects/:id', async (req, res) => {
   }
 });
 
+// GET inventory for a specific project
+app.get('/api/projects/:projectId/inventory', async (req, res) => {
+  try {
+    const items = await InventoryItem.find({ project: req.params.projectId });
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch inventory' });
+  }
+});
+
+// POST new inventory item for a specific project
+app.post('/api/projects/:projectId/inventory', async (req, res) => {
+  try {
+    const newItem = new InventoryItem({ ...req.body, project: req.params.projectId });
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add inventory item' });
+  }
+});
 
 // Start the server
 app.listen(port, () => {

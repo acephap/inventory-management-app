@@ -1,27 +1,44 @@
 // frontend/src/AddInventoryItem.js
+
 import React, { useState } from 'react';
 
-const AddInventoryItem = ({ onAdd }) => {
+/**
+ * AddInventoryItem Component
+ * Renders a form to add a new inventory item.
+ * 
+ * Props:
+ * - onAdd: Callback function to update the inventory list after adding a new item.
+ * - projectId: The ID of the selected project to which the item belongs.
+ */
+const AddInventoryItem = ({ onAdd, projectId }) => {
+  // State for the item name and quantity
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
 
+  /**
+   * handleSubmit
+   * Handles form submission by performing basic validation, creating a new inventory item
+   * (including associating it with the current project), sending a POST request to the backend,
+   * and then calling the onAdd callback to update the inventory list.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Basic validation
+    // Basic validation: ensure both name and quantity are provided
     if (!name || !quantity) {
       alert('Please provide both name and quantity.');
       return;
     }
 
-    // Create a new item object
+    // Create a new item object with the project association
     const newItem = {
       name,
-      quantity: Number(quantity)
+      quantity: Number(quantity),
+      project: projectId // Associate item with the selected project
     };
 
-    // Send POST request to the backend
-    fetch('/api/inventory', {
+    // Send POST request to add the new inventory item under the selected project
+    fetch(`/api/projects/${projectId}/inventory`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newItem)
@@ -33,8 +50,9 @@ const AddInventoryItem = ({ onAdd }) => {
         return response.json();
       })
       .then(data => {
-        // Optionally, use a callback to update the inventory list
+        // Call the onAdd callback to update the inventory list with the new item
         onAdd(data);
+        // Reset form fields
         setName('');
         setQuantity('');
       })
@@ -43,6 +61,7 @@ const AddInventoryItem = ({ onAdd }) => {
       });
   };
 
+  // Render the form for adding a new inventory item
   return (
     <form onSubmit={handleSubmit}>
       <h2>Add New Inventory Item</h2>
@@ -53,6 +72,7 @@ const AddInventoryItem = ({ onAdd }) => {
           value={name} 
           onChange={(e) => setName(e.target.value)} 
           placeholder="Enter item name" 
+          required
         />
       </div>
       <div>
@@ -62,6 +82,7 @@ const AddInventoryItem = ({ onAdd }) => {
           value={quantity} 
           onChange={(e) => setQuantity(e.target.value)} 
           placeholder="Enter quantity" 
+          required
         />
       </div>
       <button type="submit">Add Item</button>
