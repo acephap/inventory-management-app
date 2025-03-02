@@ -1,3 +1,5 @@
+/* App.css */
+
 /* General Styles */
 body {
   font-family: Arial, sans-serif;
@@ -101,4 +103,44 @@ input {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+/* Styling for Projects Component */
+.projects-form {
+  margin-bottom: 20px;
+}
+
+.projects-form input,
+.projects-form textarea {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.projects-form button {
+  padding: 8px 12px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.projects-form button:hover {
+  opacity: 0.9;
+}
+
+.projects-list {
+  list-style: none;
+  padding: 0;
+}
+
+.projects-list li {
+  background: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
 }

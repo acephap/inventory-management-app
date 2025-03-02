@@ -4,23 +4,33 @@ import React, { useState } from 'react';
 import './App.css';
 import InventoryList from './InventoryList';
 import AddInventoryItem from './AddInventoryItem';
+import Projects from './Projects';
 
 function App() {
-
-  // Hold inventory in state so we can update it after adding a new item
   const [inventory, setInventory] = useState([]);
+  const [theme, setTheme] = useState(''); // For theming, if implemented
 
-  // This callback will be passed to AddInventoryItem so it can update the list
   const handleAddItem = (newItem) => {
     setInventory(prevItems => [...prevItems, newItem]);
   };
 
+  // Toggle theme (if using theming)
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? '' : 'dark'));
+  };
+
   return (
-    <div className="App">
+    <div className={`App ${theme}`}>
       <header className="App-header">
         <h1>Inventory Management App</h1>
+        <button onClick={toggleTheme}>
+          Switch to {theme === 'dark' ? 'Light' : 'Dark'} Mode
+        </button>
       </header>
       <main>
+        {/* Render Projects Component */}
+        <Projects />
+        {/* Render Inventory Management Components */}
         <AddInventoryItem onAdd={handleAddItem} />
         <InventoryList inventory={inventory} setInventory={setInventory} />
       </main>
