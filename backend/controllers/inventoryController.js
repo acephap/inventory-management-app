@@ -2,6 +2,9 @@
 
 const InventoryItem = require('../models/InventoryItem');
 
+/**
+ * Get all inventory items for a specific project.
+ */
 exports.getInventoryByProject = async (req, res) => {
   try {
     const items = await InventoryItem.find({ project: req.params.projectId });
@@ -11,8 +14,12 @@ exports.getInventoryByProject = async (req, res) => {
   }
 };
 
+/**
+ * Create a new inventory item for a specific project.
+ */
 exports.createInventoryItem = async (req, res) => {
   try {
+    // Create new inventory item and associate it with the project from the URL
     const newItem = new InventoryItem({ ...req.body, project: req.params.projectId });
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
@@ -21,4 +28,36 @@ exports.createInventoryItem = async (req, res) => {
   }
 };
 
-// Additional endpoints for PUT and DELETE can be similarly implemented
+/**
+ * Update an existing inventory item.
+ */
+exports.updateInventoryItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Find the inventory item by id and update with the provided data, returning the new document
+    const updatedItem = await InventoryItem.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedItem) {
+      return res.status(404).json({ error: 'Inventory item not found' });
+    }
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update inventory item' });
+  }
+};
+
+/**
+ * Delete an inventory item.
+ */
+exports.deleteInventoryItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Find the inventory item by id and delete it
+    const deletedItem = await InventoryItem.findByIdAndDelete(id);
+    if (!deletedItem) {
+      return res.status(404).json({ error: 'Inventory item not found' });
+    }
+    res.json(deletedItem);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete inventory item' });
+  }
+};
