@@ -1,29 +1,30 @@
-# Inventory Management App
+# 📦 Inventory Management App
 
-📌 Project Overview
-This project is a cross-platform inventory management system designed for project-based teams in a population health and policy center. It aims to streamline tracking and managing inventory across multiple projects while supporting various user roles.
+## 📌 Project Overview
+This cross-platform inventory management system is designed for project-based teams in a population health and policy center. It streamlines inventory tracking across multiple projects while accommodating various user roles.
 
-🎯 Objectives
-Centralized Inventory Management: Provide a single platform to manage inventory for all projects.
-Role-Based Access Control (RBAC): Enable access and functionality based on user roles (project manager, accountant, data manager, logistics officer, etc.).
-Cross-Platform Compatibility: Ensure the app works seamlessly on Windows, Android, and iOS devices.
-Real-Time Updates: Offer real-time tracking and reporting for efficient decision-making.
+## 🎯 Key Objectives
+- **Centralized Inventory Management**: A unified platform to manage inventory across all projects.
+- **Role-Based Access Control (RBAC)**: Access and functionality tailored to user roles (e.g., project manager, accountant, data manager, logistics officer).
+- **Cross-Platform Compatibility**: Seamless operation on Windows, Android, and iOS.
+- **Real-Time Updates**: Live tracking and reporting for data-driven decision-making.
 
 ## 🛠️ Technology Stack
 
-Frontend
-React: For building a responsive and dynamic web interface.
-Progressive Web App (PWA): To enhance cross-platform usability and offline capabilities.
-React Native (Future Consideration):** For developing a native mobile app experience if needed.
+### **Frontend**
+- **React**: For a responsive, dynamic web interface.
+- **Progressive Web App (PWA)**: Enhances cross-platform usability and offline functionality.
+- **React Native (Future Consideration)**: Potential native mobile app development.
 
-Backend
-Node.js with Express.js: For creating a scalable and efficient API.
-    Database Options:  
-    PostgreSQL: For relational data management, or  
-    MongoDB: For a more flexible, document-based approach.
-    Authentication:** JWT (JSON Web Tokens) for secure user authentication and session management.
+### **Backend**
+- **Node.js with Express.js**: Provides a scalable and efficient API.
+- **Database Options**:
+  - **PostgreSQL**: For structured, relational data management.
+  - **MongoDB**: For flexible, document-based data storage.
+- **Authentication**: JWT (JSON Web Tokens) for secure authentication and session management.
 
-DevOps & Tools
-    Git & GitHub: For version control and collaborative development.
-    VS Code: As the primary development environment.
-    Docker (Future Consideration):** For containerization and simplified deployment.
+### **DevOps & Tools**
+- **Git & GitHub**: Version control and collaborative development.
+- **VS Code**: Primary development environment.
+- **Docker (Future Consideration)**: Containerization for streamlined deployment.
+
