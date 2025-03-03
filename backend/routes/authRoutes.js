@@ -5,7 +5,14 @@ const router = express.Router();
 const { register, login } = require('../controllers/authController');
 const { body } = require('express-validator');
 
-// Swagger Documentation
+
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: User authentication endpoints
+ */
+
 /**
  * @swagger
  * /api/auth/register:
@@ -51,6 +58,35 @@ router.post(
   ],
   register
 );
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Log in an existing user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully logged in, returns a JWT token
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
 
 // Login endpoint
 router.post('/login', login);
