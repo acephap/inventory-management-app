@@ -39,10 +39,21 @@ body {
   background: var(--card-bg);
   border-radius: 10px;
   box-shadow: 0 4px 10px var(--card-shadow);
-  padding-top: 60px; /* Ensure the content starts below the fixed header */
+  padding-top: 60px; /* Ensure content starts below the fixed header */
 }
 
-/* Header */
+/* 
+  Define the container that holds the sidebar and main content.
+  This ensures that they are laid out side by side on larger screens.
+*/
+.app-container {
+  display: flex;
+  min-height: 80vh; /* Adjust as needed */
+}
+
+/* =========================================
+   4. Header
+========================================= */
 .App-header {
   text-align: center;
   background-color: var(--header-bg);
@@ -57,7 +68,7 @@ body {
 }
 
 /* =========================================
-   4. Sidebar
+   5. Sidebar
 ========================================= */
 .sidebar {
   width: 200px;
@@ -67,7 +78,7 @@ body {
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   height: calc(100vh - 60px); /* Full height minus header */
   position: fixed;
-  top: 60px; /* Start the sidebar below the fixed header */
+  top: 60px; /* Start sidebar below header */
   left: 0;
   overflow-y: auto;
 }
@@ -97,50 +108,46 @@ body {
 }
 
 /* =========================================
-   5. Main Content
+   6. Main Content
 ========================================= */
 .main-content {
   flex: 1;
   padding: 20px;
-  margin-left: 220px; /* Ensure it stays to the right of the sidebar */
+  margin-left: 220px; /* 200px for sidebar width + 20px extra spacing */
   min-height: 100vh;
   box-sizing: border-box;
   background-color: var(--bg-color);
 }
 
 /* =========================================
-   6. Responsive Adjustments with Media Queries
+   7. Responsive Adjustments with Media Queries
 ========================================= */
 @media (min-width: 769px) {
   .sidebar {
-    width: 200px;
     position: fixed;
-    height: calc(100vh - 60px); /* Sidebar starts below the header */
-    top: 60px; /* Header height */
+    top: 60px;
+    left: 0;
+    width: 200px;
+    height: calc(100vh - 60px);
   }
-
+  
   .main-content {
-    flex: 1;
-    padding: 20px;
-    margin-left: 220px; /* Adjust for the sidebar width */
-    min-height: 100vh;
-    box-sizing: border-box;
-    background-color: var(--bg-color);
+    margin-left: 220px;
   }
 }
 
 @media (max-width: 768px) {
-  .App {
+  .app-container {
     flex-direction: column;
   }
-
+  
   .sidebar {
     position: static;
     width: 100%;
     height: auto;
     margin-bottom: 20px;
   }
-
+  
   .main-content {
     margin-left: 0;
   }
