@@ -3,6 +3,9 @@
 const express = require('express');
 const router = express.Router();
 const { getProjects, createProject, updateProject, deleteProject } = require('../controllers/projectController');
+// Import the authentication middleware and role-based middleware
+const authMiddleware = require('../middleware/authMiddleware');
+const requireRole = require('../middleware/requireRole');
 
 /**
  * @swagger
@@ -30,7 +33,7 @@ const { getProjects, createProject, updateProject, deleteProject } = require('..
  *         description: Failed to fetch projects
  */
 // GET all projects
-router.get('/', getProjects);
+router.get('/', authMiddleware, getProjects);
 
 /**
  * @swagger
@@ -51,7 +54,7 @@ router.get('/', getProjects);
  *         description: Failed to create project
  */
 // POST create a new project
-router.post('/', createProject);
+router.post('/', authMiddleware, createProject);
 
 /**
  * @swagger
@@ -81,7 +84,7 @@ router.post('/', createProject);
  *         description: Failed to update project
  */
 // PUT update a project by id
-router.put('/:id', updateProject);
+router.put('/:id', authMiddleware, requireRole('manager'), updateProject);
 
 /**
  * @swagger
@@ -105,6 +108,6 @@ router.put('/:id', updateProject);
  *         description: Failed to delete project
  */
 // DELETE a project by id
-router.delete('/:id', deleteProject);
+router.delete('/:id', authMiddleware, requireRole('manager'), deleteProject);
 
 module.exports = router;
