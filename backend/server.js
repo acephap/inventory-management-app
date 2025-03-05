@@ -3,6 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Load environment variables
 
 // Import routes and middleware
@@ -47,7 +48,43 @@ app.get('/', (req, res) => {
 // Centralized error-handling middleware
 app.use(errorMiddleware);
 
-// Start the server
-app.listen(port, () => {
+// Start the server and integrate Socket.IO
+const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+// Initialize Socket.IO
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*', // Adjust as needed for your security requirements
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
+  }
+});
+global.io = io;
+
+// Broadcast an event when a client connects (for demonstration)
+io.on('connection', (socket) => {
+  console.log('A client connected:', socket.id);
+
+  // You can also handle disconnections:
+  socket.on('disconnect', () => {
+    console.log('A client disconnected:', socket.id);
+  });
+});
+
+// Example: Emit an event when a new inventory item is added
+// You can modify your createInventoryItem controller to emit events:
+const InventoryItem = require('./models/InventoryItem');
+const originalCreateInventoryItem = async (req, res) => {
+  try {
+    const newItem = new InventoryItem({ ...req.body, project: req.params.projectId });
+    const savedItem = await newItem.save();
+    // Emit the event to all connected clients
+    io.emit('inventoryUpdated', { action: 'create', item: savedItem });
+    res.status(201).json(savedItem);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add inventory item' });
+  }
+};
+
+// To use the new functionality, update your inventoryRoutes.js to use originalCreateInventoryItem.

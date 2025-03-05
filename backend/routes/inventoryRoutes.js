@@ -8,6 +8,9 @@ const {
   updateInventoryItem,
   deleteInventoryItem
 } = require('../controllers/inventoryController');
+const authMiddleware = require('../middleware/authMiddleware');
+const requireRole = require('../middleware/requireRole');
+
 
 /**
  * @swagger
@@ -41,7 +44,7 @@ const {
  *       500:
  *         description: Failed to fetch inventory
  */
-router.get('/', getInventoryByProject);
+router.get('/', authMiddleware, getInventoryByProject);
 
 /**
  * @swagger
@@ -72,7 +75,7 @@ router.get('/', getInventoryByProject);
  *       500:
  *         description: Failed to add inventory item
  */
-router.post('/', createInventoryItem);
+router.post('/', authMiddleware, createInventoryItem);
 
 /**
  * @swagger
@@ -111,7 +114,7 @@ router.post('/', createInventoryItem);
  *       500:
  *         description: Failed to update inventory item
  */
-router.put('/:id', updateInventoryItem);
+router.put('/:id', authMiddleware, requireRole('manager'), updateInventoryItem);
 
 /**
  * @swagger
@@ -144,6 +147,6 @@ router.put('/:id', updateInventoryItem);
  *       500:
  *         description: Failed to delete inventory item
  */
-router.delete('/:id', deleteInventoryItem);
+router.delete('/:id', authMiddleware, requireRole('manager'), deleteInventoryItem);
 
 module.exports = router;

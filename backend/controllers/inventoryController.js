@@ -22,6 +22,8 @@ exports.createInventoryItem = async (req, res) => {
     // Create new inventory item and associate it with the project from the URL
     const newItem = new InventoryItem({ ...req.body, project: req.params.projectId });
     const savedItem = await newItem.save();
+    // Emit an event (make sure `io` is accessible here, or use an event emitter)
+    global.io.emit('inventoryUpdated', { action: 'create', item: savedItem });
     res.status(201).json(savedItem);
   } catch (err) {
     res.status(500).json({ error: 'Failed to add inventory item' });
