@@ -24,6 +24,20 @@ const { generateProjectReport } = require('../controllers/reportController');
  *           type: string
  *         required: true
  *         description: The ID of the project to generate a report for
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: false
+ *         description: The start date of the report range (ISO format)
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: false
+ *         description: The end date of the report range (ISO format)
  *     responses:
  *       200:
  *         description: PDF report generated successfully
