@@ -13,6 +13,7 @@ const authRoutes = require('./routes/authRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const errorMiddleware = require('./middleware/errorMiddleware');
+const reportRoutes = require('./routes/reportRoutes');
 
 // Import Swagger configuration
 const { swaggerUi, specs } = require('./swagger');
@@ -61,6 +62,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/projects/:projectId/inventory', inventoryRoutes);
+app.use('/api/projects/:projectId/report', reportRoutes);
 
 // A simple test route
 app.get('/', (req, res) => {
