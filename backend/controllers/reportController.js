@@ -1,6 +1,7 @@
 // backend/controllers/reportController.js
 
 const PDFDocument = require('pdfkit');
+const { Parser } = require('json2csv');
 const Project = require('../models/Project');
 const InventoryItem = require('../models/InventoryItem');
 
@@ -82,3 +83,63 @@ exports.generateProjectReport = async (req, res) => {
     res.status(500).json({ error: 'Failed to generate report' });
   }
 };
+
+/**
+ * Export inventory items for a specific project as a CSV file.
+ * Fetches inventory items from the database, converts them to CSV using json2csv,
+ * and sends the CSV as a downloadable file.
+ */
+exports.exportInventoryCSV = async (req, res) => {
+    try {
+      const projectId = req.params.projectId;
+      const items = await InventoryItem.find({ project: projectId });
+      const fields = ['_id', 'name', 'quantity', 'createdAt'];
+      const parser = new Parser({ fields });
+      const csv = parser.parse(items);
+  
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="inventory_report.csv"');
+      res.send(csv);
+    } catch (err) {
+      console.error('CSV export error:', err);
+      res.status(500).json({ error: 'Failed to export CSV' });
+    }
+  };
+  
+  /**
+   * Generate a chart URL for inventory items of a specific project.
+   * Uses the QuickChart API to generate a bar chart that visualizes the inventory quantities.
+   */
+  exports.generateInventoryChart = async (req, res) => {
+    try {
+      const projectId = req.params.projectId;
+      const items = await InventoryItem.find({ project: projectId });
+      // Prepare data for the chart
+      const labels = items.map(item => item.name);
+      const data = items.map(item => item.quantity);
+      const chartConfig = {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Inventory Quantity',
+            data: data,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Inventory Distribution'
+          }
+        }
+      };
+  
+      // Generate the chart URL using QuickChart API
+      const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}`;
+      res.json({ chartUrl });
+    } catch (err) {
+      console.error('Chart generation error:', err);
+      res.status(500).json({ error: 'Failed to generate chart' });
+    }
+  };
