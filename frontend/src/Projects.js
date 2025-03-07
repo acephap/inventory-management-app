@@ -2,14 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Projects.css'; // Import separate CSS for styling
 
 /**
  * Projects Component
  * - Fetches and displays a list of projects from the backend.
  * - Provides a form to add a new project.
- * - Navigates to the Inventory page when a project is clicked.
+ * - When a project is clicked, updates the selected project and navigates to its inventory page.
+ *
+ * Props:
+ * - setSelectedProject: A function to update the globally selected project ID.
  */
-const Projects = () => {
+const Projects = ({ setSelectedProject }) => {
   // State for storing the list of projects
   const [projects, setProjects] = useState([]);
   // Loading state for when projects are being fetched
@@ -18,16 +22,33 @@ const Projects = () => {
   const [newProjectName, setNewProjectName] = useState('');
   // State for the new project's description
   const [newProjectDescription, setNewProjectDescription] = useState('');
-  
+
   // useNavigate hook from react-router-dom for navigation
   const navigate = useNavigate();
 
   // Fetch projects from the backend when the component mounts
   useEffect(() => {
-    fetch('/api/projects')
-      .then(response => response.json())
+    // Retrieve token from localStorage to include in the request header
+    const token = localStorage.getItem('token');
+    fetch('/api/projects', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
-        setProjects(data);
+        // Ensure data is an array before updating state
+        if (Array.isArray(data)) {
+          setProjects(data);
+        } else {
+          console.error('Projects data is not an array:', data);
+          setProjects([]);
+        }
         setLoading(false);
       })
       .catch(error => {
@@ -52,7 +73,7 @@ const Projects = () => {
     })
       .then(response => response.json())
       .then(data => {
-        // Append the newly added project to the existing list
+        // Append the newly added project to the list
         setProjects(prev => [...prev, data]);
         // Reset the input fields
         setNewProjectName('');
@@ -90,14 +111,10 @@ const Projects = () => {
         {projects.map(project => (
           <li
             key={project._id}
-            // When a project is clicked, navigate to its inventory page using its _id
-            onClick={() => navigate(`/project/${project._id}`)}
-            style={{
-              cursor: 'pointer',
-              marginBottom: '10px',
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
+            // On click, update the selected project and navigate to its inventory page
+            onClick={() => {
+              setSelectedProject(project._id); // Update global selected project
+              navigate(`/project/${project._id}`); // Navigate to Inventory page
             }}
           >
             <h3>{project.name}</h3>

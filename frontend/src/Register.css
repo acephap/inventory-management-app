@@ -1,0 +1,78 @@
+/* frontend/src/Register.css */
+
+/* Container for the registration form */
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto; /* Centered with vertical spacing */
+    padding: 20px 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Heading style */
+  .auth-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333333;
+    font-size: 1.8em;
+  }
+  
+  /* Registration form styling */
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Input and select styling */
+  .auth-form input,
+  .auth-form select {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+  }
+  
+  /* Focus state for inputs and select */
+  .auth-form input:focus,
+  .auth-form select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Submit button styling */
+  .auth-form button {
+    padding: 12px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover state for the button */
+  .auth-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Error message styling */
+  .error-msg {
+    color: #ff4d4f;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 480px) {
+    .auth-container {
+      margin: 50px 20px;
+      padding: 15px;
+    }
+  }
+  
