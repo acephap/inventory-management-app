@@ -6,6 +6,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet'); // Import Helmet for secure headers
 const rateLimit = require('express-rate-limit'); // Import rate limiting
+const dashboardRoutes = require('./routes/dashboardRoutes');
 require('dotenv').config(); // Load environment variables
 
 // Import routes and middleware
@@ -63,6 +64,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/projects/:projectId/inventory', inventoryRoutes);
 app.use('/api/projects/:projectId/report', reportRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // A simple test route
 app.get('/', (req, res) => {
