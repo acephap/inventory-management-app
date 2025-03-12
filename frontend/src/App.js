@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-
-// Import components and pages
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Dashboard from './Dashboard';
@@ -14,21 +12,16 @@ import Register from './Register';
 import Login from './Login';
 import Settings from './Settings';
 import SignOut from './SignOut';
-import Reports from './Reports';  // Import the Reports component
+import Reports from './Reports';
+import Unauthorized from './Unauthorized';
+import ProtectedRoute from './ProtectedRoute';
 
-/**
- * App Component
- * - Manages theme and selected project state.
- * - Sets up routing for the entire application.
- * - Passes the selected project ID to the Reports page for dynamic report generation.
- */
+
 function App() {
-  // State for theme toggling: empty string for light mode, "dark" for dark mode.
   const [theme, setTheme] = useState('');
-  // State to store the currently selected project ID (dynamically set from Projects component)
+  // State to store selected project ID (if needed)
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // Function to toggle between light and dark modes
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? '' : 'dark'));
   };
@@ -36,32 +29,56 @@ function App() {
   return (
     <Router>
       <div className={`App ${theme}`}>
-        {/* Header receives the theme toggle functionality */}
         <Header onToggleTheme={toggleTheme} theme={theme} />
         <div className="app-container">
-          {/* Sidebar for navigation */}
           <Sidebar />
           <main className="main-content">
             <Routes>
-              {/* Authentication routes */}
+              {/* Public Routes */}
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
               <Route path="/signout" element={<SignOut />} />
-              {/* Settings page for additional preferences */}
-              <Route path="/settings" element={<Settings theme={theme} onToggleTheme={toggleTheme} />} />
-              {/* Default landing page */}
-              <Route path="/" element={<Dashboard />} />
-              {/* Projects page: Pass the setter to update selectedProject */}
-              <Route path="/projects" element={<Projects setSelectedProject={setSelectedProject} />} />
-              {/* Inventory page for a specific project; projectId is read from URL */}
-              <Route path="/project/:projectId" element={<InventoryPage />} />
-              {/* Reports page: Use the selectedProject from state to generate a report */}
+              
+              {/* Protected Routes */}
+              <Route 
+                path="/" 
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/projects" 
+                element={
+                  <ProtectedRoute>
+                    <Projects setSelectedProject={setSelectedProject} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/project/:projectId" 
+                element={
+                  <ProtectedRoute>
+                    <InventoryPage />
+                  </ProtectedRoute>
+                } 
+              />
               <Route 
                 path="/reports" 
                 element={
-                  selectedProject 
-                    ? <Reports projectId={selectedProject} /> 
-                    : <div style={{ textAlign: 'center', marginTop: '20px' }}>Please select a project from the Projects page to generate a report.</div>
+                  <ProtectedRoute>
+                    {selectedProject ? <Reports projectId={selectedProject} /> : <div style={{ textAlign: 'center', marginTop: '20px' }}>Please select a project to generate a report.</div>}
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings theme={theme} onToggleTheme={toggleTheme} />
+                  </ProtectedRoute>
                 } 
               />
             </Routes>

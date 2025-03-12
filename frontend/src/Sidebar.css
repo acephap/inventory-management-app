@@ -1,139 +1,149 @@
-/* Sidebar.css */
+/* frontend/src/Sidebar.css */
 
+/* Sidebar container styling */
 .sidebar {
-    width: 250px;
-    background-color: #1f2937;
-    height: calc(100vh - 60px); /* Adjust height to account for the header */
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 60px; /* Start below the header */
-    left: 0;
-    transition: width 0.3s ease; /* Transition for expanding/collapsing sidebar */
-    overflow-y: auto; /* Allow scrolling if content exceeds height */
-  }
-  
-  .sidebar.collapsed {
-    width: 80px; /* Width when collapsed */
-  }
-  
-  .sidebar-header {
-    margin-bottom: 30px;
-    color: #f3f4f6;
-    font-size: 24px;
-    font-weight: 600;
-    text-align: center;
-    border-bottom: 1px solid #374151;
-    padding-bottom: 10px;
-    opacity: 1;
-    transition: opacity 0.3s ease; /* Smooth fade-out for header text */
-  }
-  
-  .sidebar.collapsed .sidebar-header {
-    opacity: 0; /* Hide header when collapsed */
-  }
-  
-  .nav-links {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .nav-links li {
+  width: 250px; /* Default width when expanded */
+  background-color: #1f2937;
+  height: calc(100vh - 60px); /* Full viewport height minus header height */
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 60px; /* Position below the header */
+  left: 0;
+  transition: width 0.3s ease; /* Smooth transition for expanding/collapsing */
+  overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+/* Adjusted width when the sidebar is collapsed */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Sidebar header styling */
+.sidebar-header {
+  margin-bottom: 30px;
+  color: #f3f4f6;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 10px;
+  opacity: 1;
+  transition: opacity 0.3s ease; /* Smooth fade-out effect for header text */
+}
+
+/* Hide header text when collapsed */
+.sidebar.collapsed .sidebar-header {
+  opacity: 0;
+}
+
+/* Navigation links container */
+.nav-links {
+  list-style: none;
+  padding: 0;
+}
+
+/* Each navigation list item */
+.nav-links li {
+  margin-bottom: 20px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Styling for each navigation link */
+.nav-links a {
+  display: flex;
+  align-items: center;
+  color: #d1d5db;
+  font-size: 18px;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect: change background, text color, and slide link */
+.nav-links a:hover {
+  background-color: #374151;
+  color: #ffffff;
+  transform: translateX(10px);
+}
+
+/* Icon styling within links */
+.nav-links a .icon {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #9ca3af;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Icon hover effect: change color and add a spin */
+.nav-links a:hover .icon {
+  color: #ffffff;
+  transform: rotate(360deg);
+}
+
+/* Active link styling */
+.nav-links a.active {
+  background-color: #111827;
+  color: #ffffff;
+}
+.nav-links a.active .icon {
+  color: #ffffff;
+}
+
+/* Remove right margin for icons when sidebar is collapsed */
+.nav-links a .icon.collapsed {
+  margin-right: 0;
+}
+
+/* Hide list items when sidebar is collapsed */
+.sidebar.collapsed .nav-links li {
+  opacity: 0;
+  transform: translateY(-20px); /* Slide up when hidden */
+  pointer-events: none; /* Disable hover and clicks */
+}
+
+/* Remove hover effects when collapsed */
+.sidebar.collapsed .nav-links li:hover {
+  transform: translateX(0);
+}
+
+/* When sidebar is collapsed, center the icons and hide the text */
+.sidebar.collapsed .nav-links a {
+  justify-content: center;
+  padding: 10px 5px;
+  font-size: 0; /* Hide link text */
+}
+
+/* Adjust icon size when collapsed */
+.sidebar.collapsed .nav-links a .icon {
+  font-size: 24px;
+  margin-right: 0;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: static;
+    height: auto;
+    top: 0; /* Sidebar starts at the top in mobile view */
     margin-bottom: 20px;
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition for links */
   }
-  
+  .sidebar.collapsed {
+    width: 100%;
+  }
   .nav-links a {
-    display: flex;
-    align-items: center;
-    color: #d1d5db;
-    font-size: 18px;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    justify-content: flex-start;
+    font-size: 18px; /* Ensure text is visible on mobile */
   }
-  
-  .nav-links a:hover {
-    background-color: #374151;
-    color: #ffffff;
-    transform: translateX(10px); /* Slide effect on hover */
+  .sidebar.collapsed .nav-links a {
+    font-size: 18px; /* Ensure text is not hidden when collapsed on mobile */
   }
-  
-  .nav-links a .icon {
+  .sidebar.collapsed .nav-links a .icon {
     font-size: 20px;
     margin-right: 10px;
-    color: #9ca3af;
-    transition: color 0.3s ease, transform 0.3s ease;
   }
-  
-  .nav-links a:hover .icon {
-    color: #ffffff;
-    transform: rotate(360deg); /* Spin icon on hover */
-  }
-  
-  .nav-links a.active {
-    background-color: #111827;
-    color: #ffffff;
-  }
-  
-  .nav-links a.active .icon {
-    color: #ffffff;
-  }
-  
-  .nav-links a .icon.collapsed {
-    margin-right: 0; /* Remove margin when sidebar is collapsed */
-  }
-  
-  .sidebar.collapsed .nav-links li {
-    opacity: 0;
-    transform: translateY(-20px); /* Move links slightly up and hide */
-    pointer-events: none; /* Disable hover on collapsed links */
-  }
-  
-  .sidebar.collapsed .nav-links li:hover {
-    transform: translateX(0); /* No hover effect when collapsed */
-  }
-  
-  .sidebar.collapsed .nav-links a {
-    justify-content: center; /* Center icons when collapsed */
-    padding: 10px 5px;
-    font-size: 0; /* Hide link text when collapsed */
-  }
-  
-  .sidebar.collapsed .nav-links a .icon {
-    font-size: 24px;
-    margin-right: 0; /* No space between icon and text */
-  }
-  
-  /* Mobile responsive adjustments */
-  @media (max-width: 768px) {
-    .sidebar {
-      width: 100%;
-      position: static;
-      height: auto;
-      top: 0; /* Sidebar starts at the top in mobile view */
-      margin-bottom: 20px;
-    }
-  
-    .sidebar.collapsed {
-      width: 100%;
-    }
-  
-    .nav-links a {
-      justify-content: flex-start;
-      font-size: 18px; /* Ensure text is visible on mobile */
-    }
-  
-    .sidebar.collapsed .nav-links a {
-      font-size: 18px; /* Ensure text is not hidden when collapsed on mobile */
-    }
-  
-    .sidebar.collapsed .nav-links a .icon {
-      font-size: 20px;
-      margin-right: 10px;
-    }
-  }
-  
+}

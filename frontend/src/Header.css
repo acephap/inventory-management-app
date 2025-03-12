@@ -1,6 +1,6 @@
 /* frontend/src/Header.css */
 
-/* Header container */
+/* Header container: uses flexbox for alignment, fixed positioning, and a shadow for separation */
 .header {
   display: flex;
   align-items: center;
@@ -16,18 +16,19 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Left section: logo and title */
+/* Left section: contains the logo and title; uses flex to align them */
 .header-left {
   display: flex;
   align-items: center;
 }
 
+/* Brand logo: fixed height with margin for spacing */
 .brand-logo {
   height: 40px;
   margin-right: 10px;
 }
 
-/* Navigation styling */
+/* Navigation styling: the nav element (if used) will have an unordered list that is laid out horizontally */
 .header-nav ul {
   display: flex;
   list-style: none;
@@ -35,28 +36,31 @@
   padding: 0;
 }
 
+/* Each navigation item gets some horizontal margin */
 .header-nav li {
   margin: 0 10px;
 }
 
+/* Navigation links: bold text with no underline by default */
 .header-nav a {
   color: var(--header-text);
   text-decoration: none;
   font-weight: bold;
 }
 
+/* Hover effect for navigation links: underline on hover */
 .header-nav a:hover {
   text-decoration: underline;
 }
 
-/* Search bar styling */
+/* Search bar styling: input fields with padding and border */
 .header-search input {
   padding: 5px 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-/* Right section: theme toggle button */
+/* Right section: contains the theme toggle button */
 .header-right button {
   background-color: var(--header-text);
   color: var(--header-bg);
@@ -67,11 +71,12 @@
   font-weight: bold;
 }
 
+/* Hover effect for the theme toggle button */
 .header-right button:hover {
   background-color: #f1f1f1;
 }
 
-/* Adjust layout for smaller screens */
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
   .header {
     flex-wrap: wrap;
