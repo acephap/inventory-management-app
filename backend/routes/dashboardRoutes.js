@@ -3,92 +3,135 @@
 const express = require('express');
 const router = express.Router();
 const {
-  getProjectInventoryDistribution,
-  getDistributionWithPercentages,
-  getProjectInventoryChart
-} = require('../controllers/dashboardController');
+  generateProjectReport,
+  exportInventoryCSV,
+  importInventoryCSV,
+  generateInventoryChart
+} = require('../controllers/reportController');
 
 /**
  * @swagger
  * tags:
  *   name: Dashboard
- *   description: Endpoints for dashboard analytics and KPIs
+ *   description: Endpoints for dashboard analytics, report generation, and bulk import/export
  */
 
 /**
  * @swagger
- * /api/dashboard/distribution:
+ * /api/dashboard/report/{projectId}:
  *   get:
- *     summary: Retrieve chart-ready data (labels, data) for project inventory distribution
+ *     summary: Generate a PDF report for a specific project
  *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Optional start date for filtering inventory items
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Optional end date for filtering inventory items
  *     responses:
  *       200:
- *         description: Chart data for project distribution
+ *         description: PDF report generated successfully
  *         content:
- *           application/json:
+ *           application/pdf:
  *             schema:
- *               type: object
- *               properties:
- *                 labels:
- *                   type: array
- *                   items:
- *                     type: string
- *                   description: Array of project names
- *                 data:
- *                   type: array
- *                   items:
- *                     type: number
- *                   description: Corresponding total inventory quantity
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Project not found
  *       500:
- *         description: Failed to fetch distribution data
+ *         description: Failed to generate report
  */
-router.get('/distribution', getProjectInventoryDistribution);
+router.get('/report/:projectId', generateProjectReport);
 
 /**
  * @swagger
- * /api/dashboard/distribution-percentages:
+ * /api/dashboard/report/{projectId}/csv:
  *   get:
- *     summary: Retrieve distribution data with percentages for each project
+ *     summary: Export inventory items for a specific project as CSV
  *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
  *     responses:
  *       200:
- *         description: Distribution data with total inventory and percentages
+ *         description: CSV file generated successfully
  *         content:
- *           application/json:
+ *           text/csv:
  *             schema:
- *               type: object
- *               properties:
- *                 grandTotal:
- *                   type: number
- *                   description: The sum of all inventory items across projects
- *                 distribution:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       projectName:
- *                         type: string
- *                         description: Name of the project
- *                       totalQuantity:
- *                         type: number
- *                         description: Total quantity of inventory items
- *                       percentage:
- *                         type: number
- *                         description: Percentage of grandTotal
+ *               type: string
+ *               format: binary
  *       500:
- *         description: Failed to fetch distribution data
+ *         description: Failed to export CSV
  */
-router.get('/distribution-percentages', getDistributionWithPercentages);
+router.get('/report/:projectId/csv', exportInventoryCSV);
 
 /**
  * @swagger
- * /api/dashboard/chart:
- *   get:
- *     summary: Generate a QuickChart URL for a server-side rendered chart
+ * /api/dashboard/report/{projectId}/import:
+ *   post:
+ *     summary: Import inventory items for a specific project from a CSV file
  *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: The CSV file containing inventory data
+ *     responses:
+ *       201:
+ *         description: Inventory items imported successfully
+ *       400:
+ *         description: No file provided or invalid file format
+ *       500:
+ *         description: Failed to import CSV data
+ */
+router.post('/report/:projectId/import', importInventoryCSV);
+
+/**
+ * @swagger
+ * /api/dashboard/chart/{projectId}:
+ *   get:
+ *     summary: Generate a QuickChart URL for a chart of inventory items for a specific project
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project
  *     responses:
  *       200:
- *         description: Returns a URL that can be embedded as an <img> for the chart
+ *         description: Chart URL generated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -96,10 +139,10 @@ router.get('/distribution-percentages', getDistributionWithPercentages);
  *               properties:
  *                 chartUrl:
  *                   type: string
- *                   description: URL to a generated chart image
+ *                   description: URL to the generated chart image
  *       500:
  *         description: Failed to generate chart
  */
-router.get('/chart', getProjectInventoryChart);
+router.get('/chart/:projectId', generateInventoryChart);
 
 module.exports = router;
