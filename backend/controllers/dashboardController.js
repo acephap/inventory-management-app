@@ -3,6 +3,8 @@
 const Project = require('../models/Project');
 const InventoryItem = require('../models/InventoryItem');
 const User = require('../models/User');
+const AuditLog = require('../models/AuditLog');
+
 
 /**
  * Dashboard Controller
@@ -43,5 +45,27 @@ exports.getDashboardSummary = async (req, res) => {
   } catch (err) {
     console.error('Error generating dashboard summary:', err);
     res.status(500).json({ error: 'Failed to fetch dashboard summary' });
+  }
+};
+
+/**
+ * getRecentActivity
+ * -----------------
+ * Retrieves the most recent audit log entries from the AuditLog collection.
+ * It sorts the logs in descending order by timestamp and returns the latest 10 entries.
+ *
+ * @returns {JSON} An array of recent audit log entries.
+ */
+exports.getRecentActivity = async (req, res) => {
+  try {
+    // Fetch the most recent 10 audit log entries, sorted by timestamp (newest first)
+    const recentLogs = await AuditLog.find({})
+      .sort({ timestamp: -1 })
+      .limit(10);
+      
+    res.json(recentLogs);
+  } catch (err) {
+    console.error('Error fetching recent activity logs:', err);
+    res.status(500).json({ error: 'Failed to fetch recent activity logs' });
   }
 };
