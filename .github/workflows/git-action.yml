@@ -26,8 +26,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set correct permissions for Jest
-        run: chmod +x ./node_modules/.bin/jest
+      - name: Verify Jest Installation
+        run: |
+          if [ ! -f "$(npm bin)/jest" ]; then
+            echo "Jest binary not found!"
+            exit 1
+          fi
+          chmod +x "$(npm bin)/jest"
 
       - name: Run tests
         run: npx jest
