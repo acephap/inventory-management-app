@@ -26,8 +26,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify Jest Installation
-        run: npx jest --version
+      - name: Set correct permissions for Jest
+        run: chmod +x ./node_modules/.bin/jest
 
       - name: Run tests
         run: npx jest
