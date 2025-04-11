@@ -1,4 +1,4 @@
-# 📦 Inventory Management App
+# 📦 Inventory Server
 
 ## 📌 Project Overview
 This cross-platform inventory management system is designed for project-based teams in a population health and policy center. It streamlines inventory tracking across multiple projects while accommodating various user roles.
