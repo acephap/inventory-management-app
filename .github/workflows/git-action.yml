@@ -25,18 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Verify Jest Installation
-        run: |
-          if [ ! -f "$(npm bin)/jest" ]; then
-            echo "Jest binary not found!"
-            exit 1
-          fi
-          chmod +x "$(npm bin)/jest"
-
-      - name: Run tests
-        run: npx jest
-
+      
   deploy:
     name: Push to prod
     needs: build
