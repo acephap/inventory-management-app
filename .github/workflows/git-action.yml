@@ -26,8 +26,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Jest even if no tests
-        run: npx jest --passWithNoTests
+      - name: Verify Jest Installation
+        run: npx jest --version
+
+      - name: Run tests
+        run: npx jest
 
   deploy:
     name: Push to prod
