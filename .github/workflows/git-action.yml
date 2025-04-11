@@ -52,4 +52,8 @@ jobs:
           git fetch origin
           git checkout prod
           git merge origin/dev --no-edit
+<<<<<<< HEAD
           git push origin prod
+=======
+          git push origin prod
+>>>>>>> f00c393 (Set up GitHub Actions with Jest fallback)
